@@ -1,0 +1,8 @@
+---
+- name: Provision Tuxedo OS with Kitty and Zsh
+  hosts: localhost
+  become: true
+
+  roles:
+    - role: chriscroome.kitty
+    - role: viasite-ansible.zsh
