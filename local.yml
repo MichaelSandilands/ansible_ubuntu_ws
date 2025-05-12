@@ -4,5 +4,5 @@
   become: true
 
   roles:
-    - chriscroome.kitty
-    - viasite-ansible.zsh
+    - name: chriscroome.kitty
+    - name: viasite-ansible.zsh
