@@ -1,8 +1,19 @@
 ---
-- name: Provision Tuxedo OS with Kitty and Zsh
+- name: Provision Tuxedo OS
   hosts: localhost
   become: true
 
+  pre_tasks:
+    - name: Ensure apt cache is updated
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
   roles:
-    - chriscroome.kitty
-#    - viasite-ansible.zsh
+    - kitty
+    - role: hurricanehrndz.nerdfonts
+      vars:
+        nerdfonts_fonts:
+          - fontname: 'JetBrainsMono'
+        nerdfonts_mono: yes
+
