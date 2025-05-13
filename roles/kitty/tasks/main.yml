@@ -1,5 +1,67 @@
 ---
-- name: Install kitty Terminal
-  become: no
-  roles:
-    - role: chriscroome.kitty 
+- name: Include chriscroome.kitty role
+  include_role:
+    name: chriscroome.kitty
+
+- name: Ensure ~/.local/bin directory exists
+  file:
+    path: "{{ ansible_env.HOME }}/.local/bin"
+    state: directory
+    mode: '0755'
+
+- name: Symlink kitty and kitten to ~/.local/bin
+  file:
+    src: "{{ ansible_env.HOME }}/.local/kitty.app/bin/{{ item }}"
+    dest: "{{ ansible_env.HOME }}/.local/bin/{{ item }}"
+    state: link
+    force: yes
+  loop:
+    - kitty
+    - kitten
+
+- name: Copy kitty.desktop and kitty-open.desktop to applications
+  copy:
+    src: "{{ ansible_env.HOME }}/.local/kitty.app/share/applications/{{ item }}"
+    dest: "{{ ansible_env.HOME }}/.local/share/applications/{{ item }}"
+    remote_src: yes
+  loop:
+    - kitty.desktop
+    - kitty-open.desktop
+
+- name: Update icon path in kitty*.desktop
+  replace:
+    path: "{{ ansible_env.HOME }}/.local/share/applications/{{ item }}"
+    regexp: '^Icon=kitty'
+    replace: "Icon={{ ansible_env.HOME }}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png"
+  loop:
+    - kitty.desktop
+    - kitty-open.desktop
+
+- name: Update exec path in kitty*.desktop
+  replace:
+    path: "{{ ansible_env.HOME }}/.local/share/applications/{{ item }}"
+    regexp: '^Exec=kitty'
+    replace: "Exec={{ ansible_env.HOME }}/.local/kitty.app/bin/kitty"
+  loop:
+    - kitty.desktop
+    - kitty-open.desktop
+
+- name: Ensure ~/.config directory exists
+  file:
+    path: "{{ ansible_env.HOME }}/.config"
+    state: directory
+    mode: '0755'
+
+- name: Set kitty as default terminal in xdg-terminal-exec
+  copy:
+    dest: "{{ ansible_env.HOME }}/.config/xdg-terminals.list"
+    content: "kitty.desktop\n"
+    mode: '0644'
+
+- name: Ensure ~/.local/bin is in PATH in .bashrc
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: 'export PATH="$HOME/.local/bin:$PATH"'
+    insertafter: EOF
+    state: present
+

@@ -10,10 +10,14 @@
         cache_valid_time: 3600
 
   roles:
-    - kitty
     - role: hurricanehrndz.nerdfonts
       vars:
         nerdfonts_fonts:
           - fontname: 'JetBrainsMono'
         nerdfonts_mono: yes
 
+- name: Install kitty using chriscroome.kitty role
+  hosts: localhost
+  become: no
+  roles:
+    - chriscroome.kitty
