@@ -1,5 +1,5 @@
 ---
 - name: Install kitty Terminal
-  apt:
-    name: kitty
-    state: present
+  become: no
+  roles:
+    - role: chriscroome.kitty 
