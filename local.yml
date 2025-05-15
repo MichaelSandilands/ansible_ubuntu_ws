@@ -8,6 +8,23 @@
       apt:
         update_cache: yes
         cache_valid_time: 3600
+    - name: Install Packages
+      apt:
+        pkg:
+          - build-essential
+          - curl
+          - fd-find
+          - fzf
+          - git
+          - imagemagick
+          - lazygit
+          - libmagickwand-dev
+          - lua5.1
+          - liblua5.1-0-dev
+          - luajit
+          - ripgrep
+          - tree-sitter-cli
+          - tmux
 
   roles:
     - role: hurricanehrndz.nerdfonts
@@ -16,8 +33,15 @@
           - fontname: 'JetBrainsMono'
         nerdfonts_mono: yes
 
+    - role: neovim
+
+    - role: geerlingguy.nodejs
+      vars:
+        nodejs_version: "18.x"  # LTS and LazyVim-compatible
+
+
 - name: Install kitty using chriscroome.kitty role
   hosts: localhost
   become: no
   roles:
-    - chriscroome.kitty
+    - role: kitty

@@ -1,0 +1,8 @@
+- name: Include gikeymarcia.neovim role
+  include_role:
+    name: gikeymarcia.neovim
+
+- name: Clone personal Neovim config
+  git:
+    repo: "https://github.com/MichaelSandilands/kickstart.nvim.git"
+    dest: "/home/michael/.config/nvim"
