@@ -17,7 +17,6 @@
           - fzf
           - git
           - imagemagick
-          - lazygit
           - libmagickwand-dev
           - lua5.1
           - liblua5.1-0-dev
@@ -39,6 +38,7 @@
       vars:
         nodejs_version: "18.x"  # LTS and LazyVim-compatible
 
+    - role: lazygit
 
 - name: Install kitty using chriscroome.kitty role
   hosts: localhost

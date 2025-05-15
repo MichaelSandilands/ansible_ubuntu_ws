@@ -1,0 +1,45 @@
+- name: Get latest lazygit version
+  uri:
+    url: https://api.github.com/repos/jesseduffield/lazygit/releases/latest
+    return_content: yes
+  register: lazygit_release
+
+- name: Set lazygit version
+  set_fact:
+    lazygit_version: "{{ lazygit_release.json.tag_name | regex_replace('^v', '') }}"
+
+- name: Check installed lazygit version
+  command: "{{ lazygit_install_path }}/lazygit --version"
+  register: lazygit_current_version
+  failed_when: false
+  changed_when: false
+
+- name: Skip install if version matches
+  debug:
+    msg: "Lazygit is up to date ({{ lazygit_current_version.stdout }})"
+  when: lazygit_current_version.stdout is search(lazygit_version)
+
+- name: Install or upgrade lazygit
+  block:
+
+    - name: Download lazygit release
+      get_url:
+        url: "https://github.com/jesseduffield/lazygit/releases/download/v{{ lazygit_version }}/lazygit_{{ lazygit_version }}_Linux_x86_64.tar.gz"
+        dest: "/tmp/lazygit.tar.gz"
+        mode: '0644'
+
+    - name: Extract lazygit binary
+      unarchive:
+        src: "/tmp/lazygit.tar.gz"
+        dest: "/tmp"
+        remote_src: yes
+        extra_opts: [lazygit]
+
+    - name: Install lazygit binary
+      become: true
+      copy:
+        src: "/tmp/lazygit"
+        dest: "{{ lazygit_install_path }}/lazygit"
+        mode: '0755'
+
+  when: lazygit_current_version.stdout is not search(lazygit_version)
