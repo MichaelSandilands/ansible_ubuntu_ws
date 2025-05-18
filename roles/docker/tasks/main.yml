@@ -1,0 +1,9 @@
+- name: Include geerlingguy.docker role
+  include_role:
+    name: geerlingguy.docker
+
+- name: Add user to docker group
+  user:
+    name: "{{ ansible_env.USER }}"
+    groups: docker
+    append: yes

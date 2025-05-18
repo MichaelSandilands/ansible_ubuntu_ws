@@ -1,67 +1,65 @@
----
-- name: Include chriscroome.kitty role
-  include_role:
-    name: chriscroome.kitty
-
-- name: Ensure ~/.local/bin directory exists
-  file:
-    path: "{{ ansible_env.HOME }}/.local/bin"
+- name: Ensure required directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
     state: directory
     mode: '0755'
+  loop:
+    - "{{ ansible_user_dir }}/.local/bin"
+    - "{{ ansible_user_dir }}/.local/share/applications"
+    - "{{ ansible_user_dir }}/.config"
 
-- name: Symlink kitty and kitten to ~/.local/bin
-  file:
-    src: "{{ ansible_env.HOME }}/.local/kitty.app/bin/{{ item }}"
-    dest: "{{ ansible_env.HOME }}/.local/bin/{{ item }}"
+- name: (Re)install or update kitty terminal
+  ansible.builtin.shell: |
+    curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+  args:
+    chdir: "{{ ansible_user_dir }}"
+    creates: "{{ ansible_user_dir }}/.local/kitty.app"  # Optional: skip if already installed
+  environment:
+    HOME: "{{ ansible_user_dir }}"
+  register: kitty_install_result
+  changed_when: true  # Forces re-run if you always want the latest
+
+- name: Ensure symlinks for kitty and kitten binaries
+  ansible.builtin.file:
+    src: "{{ ansible_user_dir }}/.local/kitty.app/bin/{{ item }}"
+    dest: "{{ ansible_user_dir }}/.local/bin/{{ item }}"
     state: link
-    force: yes
+    force: true
   loop:
     - kitty
     - kitten
 
-- name: Copy kitty.desktop and kitty-open.desktop to applications
-  copy:
-    src: "{{ ansible_env.HOME }}/.local/kitty.app/share/applications/{{ item }}"
-    dest: "{{ ansible_env.HOME }}/.local/share/applications/{{ item }}"
+- name: Copy kitty desktop entries
+  ansible.builtin.copy:
+    src: "{{ ansible_user_dir }}/.local/kitty.app/share/applications/{{ item }}"
+    dest: "{{ ansible_user_dir }}/.local/share/applications/{{ item }}"
     remote_src: yes
+    force: true
   loop:
     - kitty.desktop
     - kitty-open.desktop
 
-- name: Update icon path in kitty*.desktop
-  replace:
-    path: "{{ ansible_env.HOME }}/.local/share/applications/{{ item }}"
-    regexp: '^Icon=kitty'
-    replace: "Icon={{ ansible_env.HOME }}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png"
+- name: Update icon path in desktop files
+  ansible.builtin.replace:
+    path: "{{ ansible_user_dir }}/.local/share/applications/{{ item }}"
+    regexp: 'Icon=kitty'
+    replace: "Icon={{ ansible_user_dir }}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png"
   loop:
     - kitty.desktop
     - kitty-open.desktop
 
-- name: Update exec path in kitty*.desktop
-  replace:
-    path: "{{ ansible_env.HOME }}/.local/share/applications/{{ item }}"
-    regexp: '^Exec=kitty'
-    replace: "Exec={{ ansible_env.HOME }}/.local/kitty.app/bin/kitty"
+- name: Update Exec path in desktop files
+  ansible.builtin.replace:
+    path: "{{ ansible_user_dir }}/.local/share/applications/{{ item }}"
+    regexp: 'Exec=kitty'
+    replace: "Exec={{ ansible_user_dir }}/.local/kitty.app/bin/kitty"
   loop:
     - kitty.desktop
     - kitty-open.desktop
 
-- name: Ensure ~/.config directory exists
-  file:
-    path: "{{ ansible_env.HOME }}/.config"
-    state: directory
-    mode: '0755'
-
-- name: Set kitty as default terminal in xdg-terminal-exec
-  copy:
-    dest: "{{ ansible_env.HOME }}/.config/xdg-terminals.list"
+- name: Make xdg-terminal-exec prefer kitty
+  ansible.builtin.copy:
+    dest: "{{ ansible_user_dir }}/.config/xdg-terminals.list"
     content: "kitty.desktop\n"
     mode: '0644'
-
-- name: Ensure ~/.local/bin is in PATH in .bashrc
-  lineinfile:
-    path: "{{ ansible_env.HOME }}/.bashrc"
-    line: 'export PATH="$HOME/.local/bin:$PATH"'
-    insertafter: EOF
-    state: present
 

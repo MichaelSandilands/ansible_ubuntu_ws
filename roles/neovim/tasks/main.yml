@@ -4,5 +4,5 @@
 
 - name: Clone personal Neovim config
   git:
-    repo: "https://github.com/MichaelSandilands/kickstart.nvim.git"
-    dest: "/home/michael/.config/nvim"
+    repo: "{{ neovim_config_repo }}"
+    dest: "{{ neovim_config_path }}"

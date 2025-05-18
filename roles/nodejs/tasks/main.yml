@@ -1,0 +1,5 @@
+- name: Include geerlingguy.nodejs role
+  include_role:
+    name: geerlingguy.nodejs 
+  vars:
+    nodejs_version: "18.x"

@@ -1,0 +1,23 @@
+- name: Ensure download directory exists
+  ansible.builtin.file:
+    path: "{{ obsidian_download_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Download Obsidian AppImage
+  ansible.builtin.get_url:
+    url: "https://github.com/obsidianmd/obsidian-releases/releases/download/v{{ obsidian_version }}/Obsidian-{{ obsidian_version }}.AppImage"
+    dest: "{{ obsidian_download_dir }}/Obsidian-{{ obsidian_version }}.AppImage"
+    mode: '0755'
+
+- name: Move AppImage to user local bin
+  ansible.builtin.copy:
+    src: "{{ obsidian_download_dir }}/Obsidian-{{ obsidian_version }}.AppImage"
+    dest: "{{ ansible_user_dir }}/.local/bin/obsidian"
+    remote_src: yes
+    mode: '0755'
+
+- name: Clean up downloaded AppImage
+  ansible.builtin.file:
+    path: "{{ obsidian_download_dir }}"
+    state: absent

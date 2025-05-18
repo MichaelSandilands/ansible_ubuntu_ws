@@ -1,47 +1,70 @@
 ---
-- name: Provision Tuxedo OS
+- name: install apt packages
   hosts: localhost
   become: true
 
-  pre_tasks:
-    - name: Ensure apt cache is updated
-      apt:
-        update_cache: yes
-        cache_valid_time: 3600
-    - name: Install Packages
-      apt:
-        pkg:
-          - build-essential
-          - curl
-          - fd-find
-          - fzf
-          - git
-          - imagemagick
-          - libmagickwand-dev
-          - lua5.1
-          - liblua5.1-0-dev
-          - luajit
-          - ripgrep
-          - tree-sitter-cli
-          - tmux
-
   roles:
-    - role: hurricanehrndz.nerdfonts
-      vars:
-        nerdfonts_fonts:
-          - fontname: 'JetBrainsMono'
-        nerdfonts_mono: yes
+    - apt
 
-    - role: neovim
-
-    - role: geerlingguy.nodejs
-      vars:
-        nodejs_version: "18.x"  # LTS and LazyVim-compatible
-
-    - role: lazygit
-
-- name: Install kitty using chriscroome.kitty role
+- name: nerdfont 
   hosts: localhost
-  become: no
+  become: true
+
   roles:
-    - role: kitty
+    - nerdfont
+
+- name: docker 
+  hosts: localhost
+  become: true
+
+  roles:
+    - docker
+
+- name: obsidian
+  hosts: localhost
+  become: true
+
+  roles:
+    - obsidian
+
+- name: kitty 
+  hosts: localhost
+  become: false
+
+  roles:
+    - kitty
+      
+- name: lazygit
+  hosts: localhost
+  become: false
+
+  roles:
+    - lazygit
+
+- name: neovim
+  hosts: localhost
+  become: true
+
+  roles:
+    - neovim
+
+- name: nodejs
+  hosts: localhost
+  become: true
+
+  roles:
+    - nodejs
+
+- name: R
+  hosts: localhost
+  become: true
+
+  roles:
+    - R
+
+- name:
+  hosts: localhost
+  become: false
+
+  roles:
+    - starship

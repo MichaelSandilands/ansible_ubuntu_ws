@@ -1,0 +1,28 @@
+- name: Ensure apt cache is updated
+  become: true
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install Packages
+  become: true
+  apt:
+    pkg:
+      - build-essential
+      - curl
+      - fd-find
+      - fonts-noto-color-emoji
+      - fzf
+      - git
+      - imagemagick
+      - libmagickwand-dev
+      - lua5.1
+      - liblua5.1-0-dev
+      - luajit
+      - make
+      - ripgrep
+      - tree-sitter-cli
+      - tmux
+      - unzip
+      - xclip
+    state: present

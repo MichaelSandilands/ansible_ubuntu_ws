@@ -1,6 +1,8 @@
----
-roles:
-  - name: hurricanehrndz.nerdfonts
-  - name: chriscroome.kitty
-  - name: gikeymarcia.neovim
-  - name: geerlingguy.nodejs
+# Ansible Galaxy role dependencies
+
+- name: geerlingguy.docker        # https://galaxy.ansible.com/geerlingguy/docker
+- name: geerlingguy.nodejs        # https://galaxy.ansible.com/geerlingguy/nodejs
+- name: gikeymarcia.neovim        # https://galaxy.ansible.com/gikeymarcia/neovim
+- name: hurricanehrndz.nerdfonts  # https://galaxy.ansible.com/hurricanehrndz/nerdfonts
+- name: andrewrothstein.starship  # https://galaxy.ansible.com/andrewrothstein/starship
+
