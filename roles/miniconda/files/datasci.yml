@@ -1,0 +1,14 @@
+name: datasci
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pandas
+  - numpy
+  - matplotlib
+  - seaborn
+  - jupyterlab
+  - ipykernel
+  - scikit-learn
+  - pip

@@ -62,9 +62,23 @@
   roles:
     - R
 
-- name:
+- name: starship
   hosts: localhost
   become: false
 
   roles:
     - starship
+
+- name: miniconda
+  hosts: localhost
+  become: false
+
+  roles:
+    - miniconda
+
+- name: quarto
+  hosts: localhost
+  become: true
+
+  roles:
+    - quarto

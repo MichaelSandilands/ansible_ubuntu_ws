@@ -1,0 +1,3 @@
+kitty_app_path: "{{ ansible_user_dir }}/.local/kitty.app"
+kitty_bin_path: "{{ ansible_user_dir }}/.local/bin"
+kitty_desktop_path: "{{ ansible_user_dir }}/.local/share/applications"

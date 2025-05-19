@@ -6,3 +6,6 @@
 - name: hurricanehrndz.nerdfonts  # https://galaxy.ansible.com/hurricanehrndz/nerdfonts
 - name: andrewrothstein.starship  # https://galaxy.ansible.com/andrewrothstein/starship
 
+
+- name: andrewrothstein.miniconda
+- name: Appsilon.quarto

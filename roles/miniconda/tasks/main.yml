@@ -1,0 +1,19 @@
+- name: Install Miniconda using andrewrothstein.miniconda
+  include_role:
+    name: andrewrothstein.miniconda
+  vars:
+    miniconda_escalate: false
+    miniconda_parent_dir: "{{ ansible_user_dir }}"
+
+- name: Ensure conda initialization in .bashrc
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_user_dir }}/.bashrc"
+    line: 'eval "$({{ ansible_user_dir }}/anaconda/bin/conda shell.bash hook)"'
+    insertafter: EOF
+    state: present
+
+- name: Create 'datasci' Conda environment
+  ansible.builtin.command: "{{ ansible_user_dir }}/anaconda/bin/conda env create -f {{ playbook_dir }}/roles/miniconda/files/datasci.yml"
+  args:
+    creates: "{{ ansible_user_dir }}/anaconda/envs/datasci"
+
