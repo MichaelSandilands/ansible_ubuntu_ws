@@ -22,7 +22,7 @@
 
 - name: obsidian
   hosts: localhost
-  become: true
+  become: false
 
   roles:
     - obsidian
