@@ -1,4 +1,3 @@
 ---
 lazygit_version: latest
-lazygit_install_path: /usr/local/bin
-
+lazygit_install_path: "{{ ansible_user_dir }}/.local/bin"
