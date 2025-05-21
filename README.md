@@ -25,7 +25,9 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install -y ansible
 
 # Install Ansible Galaxy role dependencies
-ansible-galaxy install -r https://raw.githubusercontent.com/MichaelSandilands/ansible_ubuntu_ws/main/requirements.yml
+curl -L -o requirements.yml https://raw.githubusercontent.com/MichaelSandilands/ansible_ubuntu_ws/refs/heads/main/requirements.yml
+ansible-galaxy install -r requirements.yml
+rm requirements.yml
 
 # Pull and run the provisioning playbook
 ansible-pull -U https://github.com/MichaelSandilands/ansible_ubuntu_ws.git -K
