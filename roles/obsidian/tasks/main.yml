@@ -10,6 +10,12 @@
     dest: "{{ obsidian_download_dir }}/Obsidian-{{ obsidian_version }}.AppImage"
     mode: '0755'
 
+- name: Ensure local bin directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.local/bin"
+    state: directory
+    mode: '0755'
+
 - name: Move AppImage to user local bin
   ansible.builtin.copy:
     src: "{{ obsidian_download_dir }}/Obsidian-{{ obsidian_version }}.AppImage"
