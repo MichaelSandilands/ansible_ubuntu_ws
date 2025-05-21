@@ -37,6 +37,12 @@
         extra_opts: [lazygit]
         creates: "/tmp/lazygit"
 
+    - name: Ensure lazygit install path exists
+      ansible.builtin.file:
+        path: "{{ lazygit_install_path }}"
+        state: directory
+        mode: '0755'
+
     - name: Install lazygit binary
       ansible.builtin.copy:
         src: "/tmp/lazygit"
